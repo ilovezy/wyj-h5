@@ -8,7 +8,7 @@
 
 
     <div class='title'>
-      遇见你，很美
+      注册
     </div>
 
     <div class='form-body'>
