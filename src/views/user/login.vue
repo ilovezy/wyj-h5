@@ -7,7 +7,7 @@
     </navbar>
 
     <div class='title'>
-      欢迎回来
+      登录
     </div>
 
     <div class='form-body'>
@@ -94,22 +94,30 @@
       doLogin() {
         const self = this
         if (this.validForm()) {
-          this.$dialog.loading.open('正在登录...');
-          this.axios.post('/security/token', {
-            loginName: this.loginName,
-            password: this.password
-          }).then(res => {
-            if (res.token) {
-              USER.setToken(res.token)
-              USER.setLoginName(this.loginName)
-              this.$dialog.toast({mes: '登录成功'})
-              setTimeout(() => {
-                // self.$router.replace({path: '/account'})
-                self.$router.back()
-              }, 2000)
-            }
-          })
+          // this.$dialog.loading.open('正在登录...');
+          this.$dialog.toast({mes: '正在登录...'})
+
+          this.loginSuccess('fuck todo')
+          // this.axios.post('/security/token', {
+          //   loginName: this.loginName,
+          //   password: this.password
+          // }).then(res => {
+          //   if (res.token) {
+          //     self.loginSuccess(res.token)
+          //   }
+          // })
         }
+      },
+
+      loginSuccess(token){
+        const self = this
+        USER.setToken(token)
+        USER.setLoginName(this.loginName)
+        this.$dialog.toast({mes: '登录成功'})
+        setTimeout(() => {
+          self.$router.replace({path: '/account'})
+          // self.$router.back()
+        }, 1000)
       }
     }
   }

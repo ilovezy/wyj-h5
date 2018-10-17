@@ -74,16 +74,10 @@
 </template>
 <script>
   import USER from '../../global/USER';
-  import NotLoginPage from './indexComp/notLoginPage'
-  import BankStep from './indexComp/bankStep'
 
   export default {
-    components: {
-      NotLoginPage, BankStep
-    },
     data() {
       return {
-        isLogin: false,
         openBank: true,
         loginName: '',
         showNum: true
@@ -94,25 +88,30 @@
     },
 
     methods: {
+      getToken() {
+        if (USER.isLogin()) {
+          this.getAccount()
+          this.loginName = USER.getLoginName()
+        } else {
+          USER.logout()
+          this.$router.push('/login')
+        }
+      },
+
       logout() {
         USER.logout()
+        this.$dialog.toast({mes: '退出登录成功！请重新登录'})
+        setTimeout(() =>{
+          this.$router.push('/login')
+        }, 2000)
       },
+
       toggleShowNum() {
         this.showNum = !this.showNum
       },
 
       sayFuck() {
         this.$dialog.toast({mes: 'fuclk TODO'})
-      },
-
-      getToken() {
-        if (USER.isLogin()) {
-          this.isLogin = true
-          this.getAccount()
-          this.loginName = USER.getLoginName()
-        } else {
-          this.isLogin = false
-        }
       },
 
       getAccount() {

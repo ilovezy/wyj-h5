@@ -29,7 +29,7 @@ Vue.config.productionTip = false
 Vue.config.devtools = false
 
 //全局路由钩子
-let tabPages = ['home', 'product', 'account']
+let tabPages = ['accountHome', 'product', 'account']
 
 function isTabSwitch(to, from) {
   let toName = to.name || ''
@@ -50,7 +50,40 @@ router.beforeEach((to, from, next) => {
     // 判断该路由是否需要登录权限
     if (localStorage.getItem('token')) {
       //判断token是否存在
-      store.commit('setPageDirection', 'slide-left');
+      // store.commit('setPageDirection', 'slide-left');
+      // next()
+      let isTab = isTabSwitch(to, from)
+      let add = isTab ? 'addRouteChainNoAnimate' : 'addRouteChain'
+      let pop = isTab ? 'popRouteChainNoAnimate' : 'popRouteChain'
+      if (routeLength === 0) {
+        add = 'addRouteChainNoAnimate'
+        if (to.path === from.path && to.path === '/') {
+          //当直接打开根路由的时候
+          store.commit(add, to);
+        } else {
+          //直接打开非根路由的时候其实生成了两个路径，from其实就是根路由
+          store.commit(add, from);
+          store.commit(add, to);
+        }
+      } else if (routeLength === 1) {
+        store.commit(add, to);
+      } else {
+        let lastBeforeRoute = store.state.routeChain[routeLength - 2];
+
+        if (from.path == '/forgetNext'  && to.path == '/login') { // fuck 忘记密码第二步跳回登录页面，需要跳两次
+          store.commit('popRouteChain2');
+        } else {
+          if (to.path == '/' || tabPages.indexOf(to.name) > -1) {
+            store.commit(pop);
+          } else {
+            if (lastBeforeRoute.path === to.path) {
+              store.commit(pop);
+            } else {
+              store.commit(add, to);
+            }
+          }
+        }
+      }
       next()
     } else {
       localStorage.clear()
@@ -91,13 +124,6 @@ router.beforeEach((to, from, next) => {
             store.commit(add, to);
           }
         }
-
-        // if (lastBeforeRoute.path === to.path && lastBeforeRoute.name === to.name) {
-        // // if (lastBeforeRoute.path === to.path) {
-        //   store.commit(pop);
-        // } else {
-        //   store.commit(add, to);
-        // }
       }
     }
     next()

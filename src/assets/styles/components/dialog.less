@@ -122,12 +122,13 @@
 .toast {
   min-width: 60%;
   max-width: 80%;
-  background: #fff;
-  color: @color-main;
+  color: #fff;
+  background: @color-main;
   text-align: center;
   box-shadow: 0px 4px 24px 0px rgba(161, 161, 161, 0.21);
-  padding: 0.8rem 0.2rem;
-  border-radius: 2px;
+  padding: 0.4rem 0.8rem;
+  opacity: 0.8;
+  border-radius: 8px;
   animation: zoomIn .06s ease forwards;
   &.toast-none-icon {
     .toast-content {
@@ -137,7 +138,7 @@
 }
 
 .toast-content {
-  font-size: .36rem;
+  font-size: .28rem;
   padding: 0 .3rem .3rem .3rem;
   line-height: .44rem;
   word-break: break-all;
